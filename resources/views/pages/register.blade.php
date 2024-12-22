@@ -1,4 +1,4 @@
-<x-layouts.header title="Login" />
+<x-layouts.header title="Register" />
 
 <body class="bg-gradient-primary">
   <div class="container">
@@ -8,15 +8,16 @@
           <div class="card-body p-0">
             <div class="p-5">
               <div class="text-center">
-                <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
+                <h1 class="h4 text-gray-900 mb-4">REGISTER</h1>
               </div>
-              <!-- show error message -->
-              @if (session('error'))
+
+              @if(session('error'))
               <div class="alert alert-danger">
                 {{ session('error') }}
               </div>
               @endif
-              <form class="user" action="{{ url('/login') }}" method="POST">
+
+              <form class="user" action="{{ url('/register') }}" method="POST">
                 @csrf
                 <div class="form-group">
                   <input
@@ -38,11 +39,10 @@
                     required />
                 </div>
                 <button type="submit" class="btn btn-primary btn-user btn-block">
-                  Login
+                  Register
                 </button>
-                <hr />
                 <div class="text-center">
-                  <a class="small" href="{{ url('/register') }}">Belum punya akun?</a>
+                  <a class="small" href="{{ url('/login') }}">Sudah punya akun?</a>
                 </div>
               </form>
             </div>
