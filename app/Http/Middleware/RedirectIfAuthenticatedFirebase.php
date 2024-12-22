@@ -17,7 +17,7 @@ class RedirectIfAuthenticatedFirebase
     public function handle(Request $request, Closure $next)
     {
         if (session()->has('firebaseUserId')) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('barang.index');
         }
 
         return $next($request);

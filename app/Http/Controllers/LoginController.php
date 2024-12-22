@@ -32,7 +32,7 @@ class LoginController extends Controller
             session()->put('firebaseUserId', $user->uid);
             session()->put('idToken', $signInResult->idToken());
 
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('barang.index');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Login Gagal, Email dan Password Tidak Sesuai');
         }

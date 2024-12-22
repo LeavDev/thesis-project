@@ -39,7 +39,7 @@ class RegisterController extends Controller
             session()->put('firebaseUserId', $response->uid);
             session()->put('idToken', $signInResult->idToken());
 
-            return redirect()->route('admin.dashboard')->with('success', 'Berhasil Register');
+            return redirect()->route('barang.index')->with('success', 'Berhasil Register');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Register Gagal');
         }

@@ -1,7 +1,8 @@
-@props(['title' => 'Admin Panel'])
+@props(['title' => 'Barang Panel'])
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="utf-8">
