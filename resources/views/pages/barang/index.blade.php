@@ -24,12 +24,6 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Barang</span></a>
             </li>
-
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Barang</span></a>
-            </li>
         </ul>
         <!-- End of Sidebar -->
 
@@ -87,22 +81,23 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center" style="width: 10%">No</th>
-                                                <th class="text-center" style="width: 30%">Nama Barang</th>
+                                                <th class="text-center" style="width: 25%">Nama Barang</th>
+                                                <th class="text-center" style="width: 15%">Model Barang</th>
                                                 <th class="text-center" style="width: 20%">Harga</th>
-                                                <th class="text-center" style="width: 20%">Stok</th>
-                                                <th class="text-center" style="width: 20%">Aksi</th>
+                                                <th class="text-center" style="width: 15%">Stok</th>
+                                                <th class="text-center" style="width: 15%">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if($barang)
+                                            @if($barang && count($barang) > 0)
                                             @foreach($barang as $key => $item)
                                             <tr>
-                                                <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td class="text-center">{{ ($barang->currentPage() - 1) * $barang->perPage() + $loop->iteration }}</td>
                                                 <td>{{ $item['name'] }}</td>
+                                                <td>{{ $item['model'] }}</td>
                                                 <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
                                                 <td class="text-center">{{ $item['stock'] }}</td>
                                                 <td>
-
                                                     <div class="d-flex justify-content-center">
                                                         <button type="button" class="btn btn-warning btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $key }}">
                                                             <i class="fas fa-edit"></i>
@@ -115,18 +110,19 @@
                                                             </button>
                                                         </form>
                                                     </div>
-
                                                 </td>
                                             </tr>
                                             @endforeach
                                             @else
                                             <tr>
-                                                <td colspan="4" class="text-center">Belum ada data</td>
+                                                <td colspan="6" class="text-center">Belum ada data</td>
                                             </tr>
                                             @endif
                                         </tbody>
-
                                     </table>
+                                    <div class="d-flex justify-content-center">
+                                        {{ $barang->links() }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -154,8 +150,12 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Nama</label>
+                            <label for="name">Nama Barang</label>
                             <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Model Barang</label>
+                            <input type="text" class="form-control" id="model" name="model" required>
                         </div>
                         <div class="form-group">
                             <label for="price">Harga</label>
@@ -189,8 +189,12 @@
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <label for="name">Nama</label>
+                            <label for="name">Nama Barang</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $item['name'] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Model Barang</label>
+                            <input type="text" class="form-control" id="model" value="{{ $item['model'] }}" name="model" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="price">Price</label>

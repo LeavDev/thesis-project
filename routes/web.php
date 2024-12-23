@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,10 @@ Route::middleware(['guest'])->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/login', 'index')->name('login');
         Route::post('/login', 'login')->name('login.auth');
+    });
+
+    Route::controller(ForgotPasswordController::class)->group(function () {
+        Route::get('/forgot-password', 'showForgetPasswordForm')->name('forgot-password');
+        Route::post('/forgot-password', 'submitForgetPasswordForm')->name('forgot-password.auth');
     });
 });

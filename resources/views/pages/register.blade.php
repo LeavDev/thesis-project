@@ -17,7 +17,7 @@
               </div>
               @endif
 
-              <form class="user" action="{{ url('/register') }}" method="POST">
+              <form class="user" action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="form-group">
                   <input
@@ -42,7 +42,7 @@
                   Register
                 </button>
                 <div class="text-center">
-                  <a class="small" href="{{ url('/login') }}">Sudah punya akun?</a>
+                  <a class="small" href="{{ route('login') }}">Sudah punya akun?</a>
                 </div>
               </form>
             </div>

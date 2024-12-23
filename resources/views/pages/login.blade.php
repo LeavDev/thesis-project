@@ -16,7 +16,7 @@
                 {{ session('error') }}
               </div>
               @endif
-              <form class="user" action="{{ url('/login') }}" method="POST">
+              <form class="user" action="{{ route('login') }}" method="POST">
                 @csrf
                 <div class="form-group">
                   <input
@@ -42,7 +42,11 @@
                 </button>
                 <hr />
                 <div class="text-center">
-                  <a class="small" href="{{ url('/register') }}">Belum punya akun?</a>
+                  <a class="small" href="{{ route('forgot-password') }}">Lupa Password?</a>
+                </div>
+
+                <div class="text-center">
+                  <a class="small" href="{{ route('register') }}">Belum punya akun?</a>
                 </div>
               </form>
             </div>
