@@ -94,36 +94,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if($barang)
-                                            @foreach($barang as $key => $item)
-                                            <tr>
-                                                <td class="text-center">{{ $loop->iteration }}</td>
-                                                <td>{{ $item['name'] }}</td>
-                                                <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
-                                                <td class="text-center">{{ $item['stock'] }}</td>
-                                                <td>
-
-                                                    <div class="d-flex justify-content-center">
-                                                        <button type="button" class="btn btn-warning btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $key }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                        <form action="{{ route('barang.destroy', $key) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            @else
-                                            <tr>
-                                                <td colspan="4" class="text-center">Belum ada data</td>
-                                            </tr>
-                                            @endif
+                                            <!-- DataTables will populate this automatically -->
                                         </tbody>
 
                                     </table>
@@ -176,41 +147,175 @@
     </div> <!-- End of Add Modal -->
 
     <!-- Edit Modal -->
-    @foreach($barang as $key => $item)
+    {{-- @foreach($barang as $key => $item)
     <div class="modal fade" id="editModal{{ $key }}" tabindex="-1" aria-labelledby="editModalLabel{{ $key }}" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel{{ $key }}">Edit Data</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('barang.update', $key) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-body">
-                        <div class="form-group mb-3">
-                            <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $item['name'] }}" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" value="{{ $item['price'] }}" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="stock">Stock</label>
-                            <input type="number" class="form-control" id="stock" name="stock" value="{{ $item['stock'] }}" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ $key }}">Edit Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form action="{{ route('barang.update', $key) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="name">Nama</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $item['name'] }}" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{ $item['price'] }}" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="stock">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" value="{{ $item['stock'] }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
         </div>
     </div>
-    @endforeach
-    <!-- End of Edit Modal -->
+    </div>
+    @endforeach --}} <!-- End of Edit Modal -->
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.noConflict();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // Initialize DataTable
+            let table = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('barang.index') }}",
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'price',
+                        name: 'price',
+                        render: function(data) {
+                            return 'Rp ' + new Intl.NumberFormat('id-ID').format(data);
+                        }
+                    },
+                    {
+                        data: 'stock',
+                        name: 'stock'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return `
+                            <button class="btn btn-primary btn-sm edit-btn" data-id="${meta.row}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${meta.row}">Delete</button>
+                        `;
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+
+            // Add Modal Reset Form
+            $('#addModal').on('show.bs.modal', function() {
+                $('#barangForm').trigger("reset");
+            });
+
+            // Delete item
+            function deleteFunc(id) {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ route('barang.destroy', '') }}/" + id,
+                        success: function(res) {
+                            table.draw();
+                        }
+                    });
+                }
+            }
+
+            // Form submission
+            $('#barangForm').submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('barang.store') }}",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        $('#addModal').modal('hide');
+                        table.draw();
+                        $('#barangForm').trigger("reset");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+
+            // Edit form submission
+            $('.editForm').submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                var id = $(this).data('id');
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('barang.update', '') }}/" + id,
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        $('#editModal' + id).modal('hide');
+                        table.draw();
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+
+            // Delete button click handler
+            $('#dataTable').on('click', '.delete-btn', function() {
+                var id = $(this).data('id');
+                if (confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ route('barang.destroy', '') }}/" + id,
+                        success: function(res) {
+                            console.log(res);
+                            table.draw();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            alert('Failed to delete item. Please try again.');
+                        }
+
+                    });
+                }
+            });
+
+        });
+    </script>
+
 </body>
 
 <x-layouts.footer />

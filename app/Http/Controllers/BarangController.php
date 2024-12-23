@@ -16,9 +16,16 @@ class BarangController extends Controller
 
     public function index()
     {
-        $barang = $this->firebase->getAll() ?? [];
-        return view('pages.barang.index', compact('barang'));
+        if (request()->ajax()) {
+            $barang = $this->firebase->getAll() ?? [];
+            return datatables()->of($barang)
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        return view('pages.barang.index');
     }
+
 
     public function store(Request $request)
     {
@@ -28,8 +35,8 @@ class BarangController extends Controller
             'stock' => 'required|numeric'
         ]);
 
-        $this->firebase->create($data);
-        return redirect()->back()->with('success', 'Data added successfully');
+        $barang = $this->firebase->create($data);
+        return response()->json($barang);
     }
 
     public function update(Request $request, $id)
@@ -40,13 +47,13 @@ class BarangController extends Controller
             'stock' => 'required|numeric'
         ]);
 
-        $this->firebase->update($id, $data);
-        return redirect()->back()->with('success', 'Data updated successfully');
+        $barang = $this->firebase->update($id, $data);
+        return response()->json($barang);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $this->firebase->delete($id);
-        return redirect()->back()->with('success', 'Data deleted successfully');
+        $this->firebase->delete($request->id);
+        return response()->json(['success' => true]);
     }
 }
