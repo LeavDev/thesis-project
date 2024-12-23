@@ -18,7 +18,13 @@ class BarangController extends Controller
     {
         if (request()->ajax()) {
             $barang = $this->firebase->getAll() ?? [];
-            return datatables()->of($barang)
+            $formattedData = [];
+
+            foreach ($barang as $key => $item) {
+                $item['firebase_id'] = $key;
+                $formattedData[] = $item;
+            }
+            return datatables()->of($formattedData)
                 ->addIndexColumn()
                 ->make(true);
         }

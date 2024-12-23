@@ -24,12 +24,6 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Barang</span></a>
             </li>
-
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Barang</span></a>
-            </li>
         </ul>
         <!-- End of Sidebar -->
 
@@ -196,9 +190,26 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('barang.index') }}",
+                pageLength: 10,
+                info: false,
+                lengthMenu: [
+                    [5, 10, 25],
+                    [5, 10, 25]
+                ],
+                order: [
+                    [0, 'asc']
+                ],
+                responsive: true,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Cari Nama Barang...",
+                    emptyTable: "Belum ada data tersedia",
+                    zeroRecords: "Tidak ada data yang cocok ditemukan"
+                },
                 columns: [{
                         data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
+                        name: 'DT_RowIndex',
+                        className: 'text-center'
                     },
                     {
                         data: 'name',
@@ -213,18 +224,22 @@
                     },
                     {
                         data: 'stock',
-                        name: 'stock'
+                        name: 'stock',
+                        className: 'text-center'
                     },
                     {
                         data: null,
                         render: function(data, type, row, meta) {
+                            console.log('Row Data:', row);
+
                             return `
-                            <button class="btn btn-primary btn-sm edit-btn" data-id="${meta.row}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-btn" data-id="${meta.row}">Delete</button>
+                            <button class="btn btn-primary btn-sm edit-btn" data-id="${row.firebase_id}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${row.firebase_id}">Delete</button>
                         `;
                         },
                         orderable: false,
-                        searchable: false
+                        searchable: false,
+                        className: 'text-center'
                     }
                 ]
             });

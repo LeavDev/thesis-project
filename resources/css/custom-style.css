@@ -1,0 +1,27 @@
+.dataTables_paginate {
+    margin-top: 20px !important;
+}
+
+.paginate_button {
+    padding: 5px 10px !important;
+    margin: 0 5px !important;
+    border-radius: 5px !important;
+    border: 1px solid #ddd !important;
+    cursor: pointer !important;
+}
+
+.paginate_button.current {
+    background: #4e73df !important;
+    color: white !important;
+    border: 1px solid #4e73df !important;
+}
+
+.paginate_button:hover {
+    background: #eaecf4 !important;
+    color: #4e73df !important;
+}
+
+.paginate_button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
