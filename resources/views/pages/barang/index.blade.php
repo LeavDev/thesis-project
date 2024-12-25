@@ -94,7 +94,7 @@
                                             <tr>
                                                 <td class="text-center">{{ ($barang->currentPage() - 1) * $barang->perPage() + $loop->iteration }}</td>
                                                 <td>{{ $item['name'] }}</td>
-                                                <td>{{ $item['model'] }}</td>
+                                                <td>{{ is_array($item['model']) ? $item['model']['filename'] : $item['model'] }}</td>
                                                 <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
                                                 <td class="text-center">{{ $item['stock'] }}</td>
                                                 <td>
@@ -146,7 +146,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('barang.store') }}" method="POST">
+                <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -155,7 +155,7 @@
                         </div>
                         <div class="form-group">
                             <label for="model">Model Barang</label>
-                            <input type="text" class="form-control" id="model" name="model" required>
+                            <input type="file" class="form-control" id="model" name="model" accept=".glb" required>
                         </div>
                         <div class="form-group">
                             <label for="price">Harga</label>
@@ -184,7 +184,7 @@
                     <h5 class="modal-title" id="editModalLabel{{ $key }}">Edit Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('barang.update', $key) }}" method="POST">
+                <form action="{{ route('barang.update', $key) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
@@ -194,7 +194,8 @@
                         </div>
                         <div class="form-group">
                             <label for="model">Model Barang</label>
-                            <input type="text" class="form-control" id="model" value="{{ $item['model'] }}" name="model" required>
+                            <input type="file" class="form-control" id="model" name="model" accept=".glb">
+                            <small class="text-muted">Current file: {{ is_array($item['model']) ? $item['model']['filename'] : $item['model'] }}</small>
                         </div>
                         <div class="form-group mb-3">
                             <label for="price">Price</label>

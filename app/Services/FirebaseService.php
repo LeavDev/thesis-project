@@ -25,10 +25,24 @@ class FirebaseService
 
     public function create($data)
     {
-        return $this->database->getReference($this->tableName)
-            ->push($data)
-            ->getValue();
+        if (isset($data['model']) && $data['model'] instanceof \Illuminate\Http\UploadedFile) {
+            $modelFile = $data['model'];
+            $fileName = time() . '_' . $modelFile->getClientOriginalName();
+
+            // Convert file to base64
+            $fileContent = base64_encode(file_get_contents($modelFile->getRealPath()));
+
+            // Replace file object with base64 string and filename
+            $data['model'] = [
+                'content' => $fileContent,
+                'filename' => $fileName
+            ];
+        }
+
+        $reference = $this->database->getReference($this->tableName)->push($data);
+        return $reference->getValue();
     }
+
 
     public function find($id)
     {
@@ -37,10 +51,25 @@ class FirebaseService
 
     public function update($id, $data)
     {
+        if (isset($data['model']) && $data['model'] instanceof \Illuminate\Http\UploadedFile) {
+            $modelFile = $data['model'];
+            $fileName = time() . '_' . $modelFile->getClientOriginalName();
+
+            // Convert file to base64
+            $fileContent = base64_encode(file_get_contents($modelFile->getRealPath()));
+
+            // Replace file object with base64 string and filename
+            $data['model'] = [
+                'content' => $fileContent,
+                'filename' => $fileName
+            ];
+        }
+
         return $this->database->getReference($this->tableName)
             ->getChild($id)
             ->update($data);
     }
+
 
     public function delete($id)
     {

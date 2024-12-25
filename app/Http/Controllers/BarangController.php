@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class BarangController extends Controller
 {
     protected $firebase;
-    protected $perPage = 5;
+    protected $perPage = 2;
 
     public function __construct(FirebaseService $firebase)
     {
@@ -39,12 +39,14 @@ class BarangController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
-            'model' => 'required',
+            'model' => 'required|file',
             'price' => 'required|numeric',
             'stock' => 'required|numeric'
         ]);
 
-        $this->firebase->create($data);
+
+        $result = $this->firebase->create($data);
+
         return redirect()->back()->with('success', 'Data added successfully');
     }
 
@@ -52,10 +54,14 @@ class BarangController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
-            'model' => 'required',
+            'model' => 'nullable|file',
             'price' => 'required|numeric',
             'stock' => 'required|numeric'
         ]);
+
+        if (!$request->hasFile('model')) {
+            unset($data['model']);
+        }
 
         $this->firebase->update($id, $data);
         return redirect()->back()->with('success', 'Data updated successfully');
