@@ -29,14 +29,11 @@ class FirebaseService
             $modelFile = $data['model'];
             $fileName = time() . '_' . $modelFile->getClientOriginalName();
 
-            // Convert file to base64
-            $fileContent = base64_encode(file_get_contents($modelFile->getRealPath()));
+            // Store file in storage/app/public/models directory
+            $path = $modelFile->storeAs('models', $fileName, 'public');
 
-            // Replace file object with base64 string and filename
-            $data['model'] = [
-                'content' => $fileContent,
-                'filename' => $fileName
-            ];
+            // Store only the path in Firebase
+            $data['model'] = $path;
         }
 
         $reference = $this->database->getReference($this->tableName)->push($data);
@@ -55,14 +52,11 @@ class FirebaseService
             $modelFile = $data['model'];
             $fileName = time() . '_' . $modelFile->getClientOriginalName();
 
-            // Convert file to base64
-            $fileContent = base64_encode(file_get_contents($modelFile->getRealPath()));
+            // Store file in storage/app/public/models directory
+            $path = $modelFile->storeAs('models', $fileName, 'public');
 
-            // Replace file object with base64 string and filename
-            $data['model'] = [
-                'content' => $fileContent,
-                'filename' => $fileName
-            ];
+            // Store only the path in Firebase
+            $data['model'] = $path;
         }
 
         return $this->database->getReference($this->tableName)

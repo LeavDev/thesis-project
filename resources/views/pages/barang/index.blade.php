@@ -80,10 +80,11 @@
                                         cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" style="width: 10%">No</th>
-                                                <th class="text-center" style="width: 25%">Nama Barang</th>
+                                                <th class="text-center" style="width: 5%">No</th>
+                                                <th class="text-center" style="width: 20%">Nama Barang</th>
                                                 <th class="text-center" style="width: 15%">Model Barang</th>
-                                                <th class="text-center" style="width: 20%">Harga</th>
+                                                <th class="text-center" style="width: 15%">Deskripsi</th>
+                                                <th class="text-center" style="width: 15%">Harga</th>
                                                 <th class="text-center" style="width: 15%">Stok</th>
                                                 <th class="text-center" style="width: 15%">Aksi</th>
                                             </tr>
@@ -95,6 +96,7 @@
                                                 <td class="text-center">{{ ($barang->currentPage() - 1) * $barang->perPage() + $loop->iteration }}</td>
                                                 <td>{{ $item['name'] }}</td>
                                                 <td>{{ is_array($item['model']) ? $item['model']['filename'] : $item['model'] }}</td>
+                                                <td>{{ $item['deskripsi'] }}</td>
                                                 <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
                                                 <td class="text-center">{{ $item['stock'] }}</td>
                                                 <td>
@@ -158,6 +160,10 @@
                             <input type="file" class="form-control" id="model" name="model" accept=".glb" required>
                         </div>
                         <div class="form-group">
+                            <label for="name">Deskripsi</label>
+                            <input type="text" class="form-control" id="deskripsi" name="deskripsi" required>
+                        </div>
+                        <div class="form-group">
                             <label for="price">Harga</label>
                             <input type="number" class="form-control" id="price" name="price" required>
                         </div>
@@ -196,6 +202,10 @@
                             <label for="model">Model Barang</label>
                             <input type="file" class="form-control" id="model" name="model" accept=".glb">
                             <small class="text-muted">Current file: {{ is_array($item['model']) ? $item['model']['filename'] : $item['model'] }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Deskripsi</label>
+                            <input type="text" class="form-control" id="deskripsi" name="deskripsi" value="{{ $item['deskripsi'] }}" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="price">Price</label>
